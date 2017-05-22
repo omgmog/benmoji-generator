@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <style>
+  html {background: #fff; font-size: 18px; font-family: Helvetica, sans-serif; height: 100%;}
+    body { margin: 0 auto;padding: 2vw;text-align: center; max-width: 60vw; height: 100%;background-color: #fafafa; }
+    h1 {
+      text-transform: uppercase;
+      letter-spacing: .01em;
+      font-size: 3rem;
+    }
+    #bases,
+    #eyes,
+    #mouths,
+    #extra {
+      margin-bottom: 2em;
+    }
+    img {
+      max-width: 6rem;
+      height: auto;
+    }
+    #eyes img,
+    #mouths img,
+    #extra img {
+      max-width: 3rem;
+    }
+    #canvas {
+      width: 300px;
+      height: 300px;
+      position: relative;
+      margin: auto;
+      background: #fff;
+      box-shadow: 0 3px 12px rgba(0,0,0,.3);
+    }
+    #canvas canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+    }
+    #save {
+      background: hotpink;
+      color: #fff;
+      display: inline-block;
+      text-decoration: none;
+      padding: .5em 2em;
+      margin: 1em;
+      font-size: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Benmoji generator</h1>
+  <div id="bases"></div>
+  <div id="eyes"></div>
+  <div id="mouths"></div>
+  <div id="extra"></div>
+  <div id="canvas">
+    <canvas></canvas>
+    <canvas></canvas>
+    <canvas></canvas>
+    <canvas></canvas>
+  </div>
+  <a id="save">Save</a>
+  <script>
+    (function () {
+      var canvases = document.querySelectorAll('canvas');
+      var cwidth = cheight = 300;
+
+      var basesCanvas = canvases[0];
+      var basesCtx = basesCanvas.getContext('2d');
+
+      var eyesCanvas = canvases[1];
+      var eyesCtx = eyesCanvas.getContext('2d');
+
+      var mouthsCanvas = canvases[2];
+      var mouthsCtx = mouthsCanvas.getContext('2d');
+
+      var extraCanvas = canvases[3];
+      var extraCtx = extraCanvas.getContext('2d');
+
+      basesCanvas.width = eyesCanvas.width = mouthsCanvas.width = extraCanvas.width = cwidth;
+      basesCanvas.height = eyesCanvas.height = mouthsCanvas.height = extraCanvas.height = cheight;
+
+      var basesEl = document.querySelector('#bases');
+      var eyesEl = document.querySelector('#eyes');
+      var mouthsEl = document.querySelector('#mouths');
+      var extraEl = document.querySelector('#extra');
+
+      // assign x/y positions for things
+      // [eyes X, eyes Y, mouth X, mouth Y, extra X, extra Y]
+      var basesCount = [
+        [
+          85,84,
+          85,158,
+          85,114
+        ],
+        [
+          70,56,
+          70,150,
+          70,86
+        ],
+        [
+          87,99,
+          86,177,
+          87,99
+        ],
+        [
+          73,46,
+          75,120,
+          73,76
+        ]
+      ];
+
+      var eyesCount = 21;
+      var mouthsCount = 26;
+      var extraCount = 1;
+
+      var currentBase = 0;
+      var currentEyes = 0;
+      var currentMouth = 0;
+      var currentExtra = 0;
+
+      function createEls (count, element, filename) {
+        for (var i=1;i<=count;i++) {
+          var el = document.createElement('img');
+          var n = "" + i;
+          var pad = "00000";
+          var path = `parts/${filename}/${filename}${pad.substring(0, pad.length - n.length) + n}.png`
+          el.src = path;
+          element.appendChild(el);
+        }
+      };
+
+      createEls(basesCount.length, basesEl, "bases");
+      createEls(eyesCount, eyesEl, "eyes");
+      createEls(mouthsCount, mouthsEl, "mouths");
+      createEls(extraCount, extraEl, "extra");
+
+      function getIndex(el, set) {
+        return [].indexOf.call(set, el);
+      }
+
+      function resetCanvas (canvas) {
+        var ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      };
+
+      function pickBase (e) {
+        resetCanvas(basesCanvas);
+        resetCanvas(eyesCanvas);
+        resetCanvas(mouthsCanvas);
+        resetCanvas(extraCanvas);
+
+        currentBase = getIndex(e.target, basesImgs);
+        basesCtx.drawImage(e.target, 0, 0, 300, 300);
+      };
+
+      function pickEyes (e) {
+        resetCanvas(eyesCanvas);
+
+        currentEyes = getIndex(e.target, eyesImgs);
+        eyesCtx.drawImage(e.target, basesCount[currentBase][0], basesCount[currentBase][1]);
+      };
+
+      function pickMouth (e) {
+        resetCanvas(mouthsCanvas);
+
+        currentMouth = getIndex(e.target, mouthsImgs);
+        mouthsCtx.drawImage(e.target, basesCount[currentBase][2], basesCount[currentBase][3]);
+      };
+
+      function pickExtra (e) {
+        resetCanvas(extraCanvas);
+
+        currentExtra = getIndex(e.target, extraImgs);
+        extraCtx.drawImage(e.target, basesCount[currentBase][4], basesCount[currentBase][5]);
+      };
+
+      function outputConfig () {
+        console.log(currentBase, currentEyes, currentMouth, currentExtra);
+      };
+
+      var basesImgs = basesEl.querySelectorAll('img');
+      var eyesImgs = eyesEl.querySelectorAll('img');
+      var mouthsImgs = mouthsEl.querySelectorAll('img');
+      var extraImgs = extraEl.querySelectorAll('img');
+
+
+      function bindClicks (els, fn) {
+        for (var i=0;i<els.length;i++) {
+          els[i].addEventListener('click', function (e) {
+            fn(e);
+            outputConfig();
+          });
+        }
+      }
+
+      bindClicks(basesImgs, pickBase);
+      bindClicks(eyesImgs, pickEyes);
+      bindClicks(mouthsImgs, pickMouth);
+      bindClicks(extraImgs, pickExtra);
+
+      function generateOutput() {
+        var output = document.createElement('canvas');
+        output.width = output.height = 64;
+        var outctx = output.getContext('2d');
+
+        outctx.drawImage(basesCanvas, 0, 0, 64, 64);
+        outctx.drawImage(eyesCanvas, 0, 0, 64, 64);
+        outctx.drawImage(mouthsCanvas, 0, 0, 64, 64);
+        outctx.drawImage(extraCanvas, 0, 0, 64, 64);
+
+        var image = new Image();
+        image.src = output.toDataURL("image/png");
+
+        save.href = image.src;
+        save.download = "benmoji.png";
+      }
+      save.addEventListener('click', function () {
+        generateOutput();
+      });
+
+    }());
+  </script>
+</body>
+</html>
