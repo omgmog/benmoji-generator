@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title></title>
+  <title>Benmoji Generator!</title>
   <style>
   html {background: #fff; font-size: 18px; font-family: Helvetica, sans-serif; height: 100%;}
     body { margin: 0 auto;padding: 2vw;text-align: center; max-width: 60vw; height: 100%;background-color: #fafafa; }
@@ -57,6 +57,8 @@
 </head>
 <body>
   <h1>Benmoji generator</h1>
+  <p>Select a base face, eyes, mouth and (optional) extra layer</p>
+  <p>Hit "save" and use the <i>Benmoji</i> all over the internet! (e.g. Slack)</p>
   <div id="bases"></div>
   <div id="eyes"></div>
   <div id="mouths"></div>
@@ -68,6 +70,7 @@
     <canvas></canvas>
   </div>
   <a id="save">Save</a>
+  <p>Ben was not harmed in the making of this Benmoji generator <strong style="color:#d00">❤</strong></p>
   <script>
     (function () {
       var canvases = document.querySelectorAll('canvas');
