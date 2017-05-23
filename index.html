@@ -22,45 +22,73 @@
       max-width: 6rem;
       height: auto;
     }
+    #bases img:hover {
+      animation: wiggle .2s infinite;
+    }
+    @keyframes wiggle {
+      0%,100% {
+        transform: translate3d(0,0,0)
+      }
+
+      10%,30%,50%,70%,90% {
+        transform: translate3d(-5px,0,0)
+      }
+
+      20%,40%,60%,80% {
+        transform: translate3d(5px,0,0)
+      }
+    }
     #eyes img,
     #mouths img,
     #extra img {
       max-width: 3rem;
     }
-    #wrapper {
-      position: relative;
-      height: 300px;
-    }
-    #canvas, #output {
-      left: 50%;
-      transform: translateX(-50%);
-      width: 300px;
-      height: 300px;
-      position: absolute;
-      margin: auto;
-      background: #fff;
-      box-shadow: 0 3px 12px rgba(0,0,0,.3);
+    #bases img:hover,
+    #eyes img:hover,
+    #mouths img:hover,
+    #extra img:hover {
+      cursor: pointer;
     }
     #canvas {
-      z-index: -1;
+      position: relative;
+      overflow: hidden;
+      height: 300px;
+      width: 300px;
+      background: #fff;
+      margin: 0 auto 2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,.3);
     }
     #canvas canvas {
       position: absolute;
       top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
+    }
+    h3 {
+      margin: 0;
+    }
+    .panels {
+      display: flex;
+      flex-direction: row;
+      margin-top: 2rem;
+    }
+    .panel {
+      flex: 1;
+    }
+    #output {
+      display: block;
+      margin: 2rem auto;
+      width: 64px;
+      height: 64px;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,.3);
     }
     #save {
       background: hotpink;
       color: #fff;
-      display: inline-block;
-      text-decoration: none;
       padding: .5em 2em;
-      margin: 1em;
-      font-size: 2rem;
+    }
+    #save:hover {
+      cursor: pointer;
     }
   </style>
 </head>
@@ -68,20 +96,29 @@
   <h1>Benmoji generator</h1>
   <p>Select a base face, eyes, mouth and (optional) extra layer</p>
   <p>Hit "save" and use the <i>Benmoji</i> all over the internet! (e.g. Slack)</p>
-  <div id="bases"></div>
-  <div id="eyes"></div>
-  <div id="mouths"></div>
-  <div id="extra"></div>
-  <div id="wrapper">
-    <img id="output"/>
-    <div id="canvas">
-      <canvas></canvas>
-      <canvas></canvas>
-      <canvas></canvas>
-      <canvas></canvas>
+  <div class="panels">
+    <div class="panel panel-left">
+      <h3>Heads</h3>
+      <div id="bases"></div>
+      <h3>Eyes</h3>
+      <div id="eyes"></div>
+      <h3>Mouths</h3>
+      <div id="mouths"></div>
+      <h3>Extra</h3>
+      <div id="extra"></div>
+    </div>
+    <div class="panel panel-right">
+      <div id="canvas">
+        <canvas></canvas>
+        <canvas></canvas>
+        <canvas></canvas>
+        <canvas></canvas>
+      </div>
+      <a id="save">Save</a>
+      <p>Or save/copy this image ⬇️</p>
+      <img id="output"/>
     </div>
   </div>
-  <a id="save">Save</a>
   <p>Ben was not harmed in the making of this Benmoji generator <strong style="color:#d00">❤</strong></p>
   <p><a href="https://github.com/omgmog/benmoji-generator">View this project on GitHub</a></p>
   <script>
