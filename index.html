@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Benmoji Generator!</title>
   <style>
-  html {background: #fff; font-size: 18px; font-family: Helvetica, sans-serif; height: 100%;}
+    html {background: #fff; font-size: 18px; font-family: Helvetica, sans-serif; height: 100%;}
     body { margin: 0 auto;padding: 2vw;text-align: center; max-width: 60vw; height: 100%;background-color: #fafafa; }
     h1 {
       text-transform: uppercase;
@@ -18,7 +18,7 @@
     #extra {
       margin-bottom: 2em;
     }
-    img {
+    #bases img {
       max-width: 6rem;
       height: auto;
     }
@@ -27,13 +27,22 @@
     #extra img {
       max-width: 3rem;
     }
-    #canvas {
+    #wrapper {
+      position: relative;
+      height: 300px;
+    }
+    #canvas, #output {
+      left: 50%;
+      transform: translateX(-50%);
       width: 300px;
       height: 300px;
-      position: relative;
+      position: absolute;
       margin: auto;
       background: #fff;
       box-shadow: 0 3px 12px rgba(0,0,0,.3);
+    }
+    #canvas {
+      z-index: -1;
     }
     #canvas canvas {
       position: absolute;
@@ -63,11 +72,14 @@
   <div id="eyes"></div>
   <div id="mouths"></div>
   <div id="extra"></div>
-  <div id="canvas">
-    <canvas></canvas>
-    <canvas></canvas>
-    <canvas></canvas>
-    <canvas></canvas>
+  <div id="wrapper">
+    <img id="output"/>
+    <div id="canvas">
+      <canvas></canvas>
+      <canvas></canvas>
+      <canvas></canvas>
+      <canvas></canvas>
+    </div>
   </div>
   <a id="save">Save</a>
   <p>Ben was not harmed in the making of this Benmoji generator <strong style="color:#d00">❤</strong></p>
@@ -163,6 +175,7 @@
 
         currentBase = getIndex(e.target, basesImgs);
         basesCtx.drawImage(e.target, 0, 0, 300, 300);
+        updateImage();
       };
 
       function pickEyes (e) {
@@ -170,6 +183,7 @@
 
         currentEyes = getIndex(e.target, eyesImgs);
         eyesCtx.drawImage(e.target, basesCount[currentBase][0], basesCount[currentBase][1]);
+        updateImage();
       };
 
       function pickMouth (e) {
@@ -177,6 +191,7 @@
 
         currentMouth = getIndex(e.target, mouthsImgs);
         mouthsCtx.drawImage(e.target, basesCount[currentBase][2], basesCount[currentBase][3]);
+        updateImage();
       };
 
       function pickExtra (e) {
@@ -184,6 +199,7 @@
 
         currentExtra = getIndex(e.target, extraImgs);
         extraCtx.drawImage(e.target, basesCount[currentBase][4], basesCount[currentBase][5]);
+        updateImage();
       };
 
       function outputConfig () {
@@ -210,7 +226,7 @@
       bindClicks(mouthsImgs, pickMouth);
       bindClicks(extraImgs, pickExtra);
 
-      function generateOutput() {
+      function updateImage() {
         var output = document.createElement('canvas');
         output.width = output.height = 64;
         var outctx = output.getContext('2d');
@@ -220,9 +236,12 @@
         outctx.drawImage(mouthsCanvas, 0, 0, 64, 64);
         outctx.drawImage(extraCanvas, 0, 0, 64, 64);
 
-        var image = new Image();
+        var image = document.getElementById('output');
         image.src = output.toDataURL("image/png");
+      }
 
+      function generateOutput() {
+        var image = document.getElementById('output');
         save.href = image.src;
         save.download = "benmoji.png";
       }
