@@ -6,7 +6,12 @@
   <title>Benmoji Generator!</title>
   <style>
     html {background: #fff; font-size: 18px; font-family: Helvetica, sans-serif; min-height: 100%;}
-    body { margin: 0 auto;padding: 2vw;text-align: center; max-width: 60vw; min-height: 100%;background-color: #fafafa; }
+    body { margin: 0 auto;padding: 2vw;text-align: center; width: 100%;max-width: 80%; min-height: 100%;background-color: #fafafa; }
+    @media screen and (max-width: 800px) {
+      body {
+        max-width: 90%;
+      }
+    }
     h1 {
       text-transform: uppercase;
       letter-spacing: .01em;
@@ -70,6 +75,12 @@
       display: flex;
       flex-direction: row;
       margin-top: 2rem;
+    }
+    @media screen and (max-width: 800px) {
+
+      .panels {
+        flex-direction: column;
+      }
     }
     .panel {
       flex: 1;
